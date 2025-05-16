@@ -1,4 +1,6 @@
 /* Popup Styles for Cloudflow */
+/* Import Montserrat font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 * {
     margin: 0;
@@ -7,8 +9,8 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+        'Open Sans', 'Helvetica Neue', sans-serif;
     width: 320px;
     height: 400px;
     overflow: hidden;
@@ -25,11 +27,15 @@ header {
     padding-bottom: 12px;
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 16px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1 {
     font-size: 18px;
-    color: #333;
+    color: #2273b9;
 }
 
 main {
@@ -37,62 +43,39 @@ main {
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.status-section {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.status-indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #4caf50;
-}
-
-.status-indicator.disabled {
-    background-color: #9e9e9e;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-}
-
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s;
-}
-
-.btn.primary {
-    background-color: #4285f4;
-    color: white;
-}
-
-.btn.primary:hover {
-    background-color: #3367d6;
-}
-
-.btn.secondary {
-    background-color: #f1f3f4;
-    color: #202124;
-}
-
-.btn.secondary:hover {
-    background-color: #e8eaed;
+    position: relative; /* Added to help with positioning */
 }
 
 .info-section {
-    margin-top: auto;
+    margin-top: auto; /* Push to the end of the flex container */
     padding-top: 20px;
     font-size: 13px;
     color: #5f6368;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    position: absolute; /* Position at the bottom of main */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white; /* Ensure text is readable */
+    padding-bottom: 10px; /* Add some space before footer */
+    margin-top: 25px; /* Increased to provide more space for dropdowns */
+}
+
+.info-section p {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.truncate {
+    max-width: 70%; /* Adjust this value based on your layout */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    margin-left: 4px; /* Add space between label and value */
 }
 
 footer {
@@ -102,4 +85,147 @@ footer {
     font-size: 12px;
     color: #9e9e9e;
     text-align: center;
+    position: relative; /* Ensure footer stays above content */
+    z-index: 1;
+}
+
+/* Icon button styling */
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777; /* More grayish color */
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+/* Improve hover effect to work with img */
+.icon-button:hover {
+    color: #444; /* Darker on hover, but still grayish */
+}
+
+.icon-button:hover img {
+    filter: invert(30%); /* Darker on hover */
+}
+
+/* SVG icon styling */
+.icon-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #777; /* Match the gray color */
+    stroke: #777; /* Match the gray color */
+}
+
+/* For img version of the icon */
+.icon-button img {
+    width: 16px;
+    height: 16px;
+    filter: invert(50%); /* This creates a grayish effect for images */
+    transition: filter 0.2s ease; /* Smooth transition for filter changes */
+}
+
+/* Dropdown section - more compact with reduced top margin */
+.dropdown-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Update separator style for consistent spacing */
+.dropdown-separator {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 8px 0; /* Equal spacing above and below (matches gap size) */
+    width: 100%;
+}
+
+/* Dropdown styling - more compact */
+.dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-toggle {
+    width: 100%;
+    padding: 6px 12px; /* Reduced height from 8px to 6px */
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; /* Reduced from 13px */
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-toggle:after {
+    content: '⌵';
+    font-size: 14px; /* Reduced from 16px */
+    transition: transform 0.2s ease;
+}
+
+.dropdown-toggle:hover {
+    background-color: #eee;
+}
+
+.dropdown.active .dropdown-toggle:after {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+    max-height: 160px; /* Reduced from 180px */
+}
+
+/* All dropdowns start collapsed, so no need to change the display property */
+
+.dropdown.active .dropdown-menu {
+    display: block;
+}
+
+.dropdown-search {
+    padding: 4px; /* Reduced from 6px */
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dropdown-search-input {
+    width: 100%;
+    padding: 4px 8px; /* Reduced from 5px 8px */
+    font-family: 'Montserrat', sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.dropdown-content {
+    max-height: 120px; /* Reduced from 130px */
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 6px 12px; /* Reduced from 8px 12px */
+    text-decoration: none;
+    color: #333;
+    font-size: 12px; /* Reduced from 13px */
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
 }
