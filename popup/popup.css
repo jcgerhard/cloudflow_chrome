@@ -12,7 +12,7 @@ body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
         'Open Sans', 'Helvetica Neue', sans-serif;
     width: 320px;
-    height: 400px;
+    height: 450px;
     overflow: hidden;
 }
 
@@ -135,7 +135,7 @@ footer {
 .dropdown-separator {
     height: 1px;
     background-color: #e0e0e0;
-    margin: 8px 0; /* Equal spacing above and below (matches gap size) */
+    margin: -4px 0 4px; /* Equal spacing above and below (matches gap size) */
     width: 100%;
 }
 
@@ -228,4 +228,45 @@ footer {
 
 .dropdown-item:hover {
     background-color: #f5f5f5;
+}
+
+/* Style for the selected item display */
+.dropdown-selected {
+    font-size: 11px;
+    color: #888;
+    margin-top: 6px;
+    margin-left: 12px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    height: 14px; /* Fixed height to prevent layout shifts */
+}
+
+/* Button container for side-by-side buttons */
+.button-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+/* Action button styling - updated with blue color */
+.action-button {
+    flex: 1;
+    padding: 6px 12px;
+    background-color: #2273b9; /* Changed to match h1 blue color */
+    border: 1px solid #1d65a3; /* Slightly darker border */
+    border-radius: 6px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff; /* Changed to white for better contrast */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: #1d65a3; /* Darker blue on hover */
 }

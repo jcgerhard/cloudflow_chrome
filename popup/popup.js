@@ -44,8 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize dropdown functionality
     initDropdowns();
+
+    // Initialize action buttons
 });
 
+// Function to initialize dropdowns
 function initDropdowns() {
     const dropdowns = document.querySelectorAll('.dropdown');
 
@@ -65,6 +68,7 @@ function initDropdowns() {
         const toggle = dropdown.querySelector('.dropdown-toggle');
         const searchInput = dropdown.querySelector('.dropdown-search-input');
         const items = dropdown.querySelectorAll('.dropdown-item');
+        const selectedDisplay = dropdown.querySelector('.dropdown-selected');
 
         // Toggle dropdown open/closed
         toggle.addEventListener('click', function (e) {
@@ -96,6 +100,44 @@ function initDropdowns() {
                 });
             });
         }
+
+        // Add click handlers to all dropdown items
+        items.forEach((item) => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Close the dropdown when item is clicked
+                dropdown.classList.remove('active');
+
+                // Update the selected item display
+                if (selectedDisplay) {
+                    selectedDisplay.textContent = this.textContent;
+                    // Save the selection in localStorage for persistence
+                    const dropdownId = dropdown.id;
+                    if (dropdownId) {
+                        localStorage.setItem(`${dropdownId}-selection`, this.textContent);
+                    }
+                }
+
+                // Here you can add any additional functionality when an item is clicked
+                // For example: Update the dropdown button text
+                // toggle.textContent = this.textContent;
+
+                // Or navigate to the item's href if needed
+                // const href = this.getAttribute('href');
+                // if (href && href !== '#') {
+                //     window.location.href = href;
+                // }
+            });
+        });
+
+        // Restore saved selection from localStorage
+        if (selectedDisplay && dropdown.id) {
+            const savedSelection = localStorage.getItem(`${dropdown.id}-selection`);
+            if (savedSelection) {
+                selectedDisplay.textContent = `${savedSelection}`;
+            }
+        }
     });
 
     // Double-check that all dropdowns are closed by default
@@ -104,4 +146,16 @@ function initDropdowns() {
             dropdown.classList.remove('active');
         });
     }, 0);
+}
+
+// Function to initialize action buttons
+function initActionButtons() {
+    const actionButtons = document.querySelectorAll('.action-button');
+
+    actionButtons.forEach((button, index) => {
+        button.addEventListener('click', function () {
+            console.log(`Button ${index + 1} clicked`);
+            // Add your button functionality here
+        });
+    });
 }
