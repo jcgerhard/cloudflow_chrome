@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>__MSG_appName__</title>
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>__MSG_appName__</h1>
+            </header>
+
+            <main>
+                <div class="status-section">
+                    <div class="status-indicator" id="status-indicator"></div>
+                    <span id="status-text">__MSG_statusEnabled__</span>
+                </div>
+
+                <div class="actions">
+                    <button id="toggle-btn" class="btn primary">__MSG_btnDisable__</button>
+                    <button id="options-btn" class="btn secondary">Options</button>
+                </div>
+
+                <div class="info-section">
+                    <p>Current site: <span id="current-site">-</span></p>
+                </div>
+            </main>
+
+            <footer>
+                <p>__MSG_appName__ v1.0.0</p>
+            </footer>
+        </div>
+
+        <script src="popup.js"></script>
+    </body>
+</html>

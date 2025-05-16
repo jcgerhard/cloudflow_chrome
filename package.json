@@ -1,0 +1,24 @@
+{
+    "name": "cloudflow-chrome-extension",
+    "version": "1.0.0",
+    "description": "A Chrome extension for enhancing your cloud workflow management and productivity",
+    "private": true,
+    "scripts": {
+        "build": "echo \"Add your build command here\" && exit 0",
+        "package": "zip -r cloudflow.zip . -x \"*.git*\" -x \"temp/*\" -x \"node_modules/*\"",
+        "lint": "eslint --ext .js .",
+        "test": "echo \"Add your test command here\" && exit 0"
+    },
+    "keywords": [
+        "chrome-extension",
+        "cloud",
+        "productivity"
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "eslint": "^8.42.0",
+        "eslint-config-prettier": "^8.8.0",
+        "web-ext": "^7.6.2"
+    }
+}

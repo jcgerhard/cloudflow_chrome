@@ -1,0 +1,86 @@
+{
+  "appName": {
+    "message": "Cloudflow",
+    "description": "The name of the extension"
+  },
+  "appDescription": {
+    "message": "A Chrome extension for enhancing your cloud workflow",
+    "description": "The description of the extension"
+  },
+  "btnEnable": {
+    "message": "Enable",
+    "description": "Button text to enable the extension"
+  },
+  "btnDisable": {
+    "message": "Disable",
+    "description": "Button text to disable the extension"
+  },
+  "statusEnabled": {
+    "message": "Enabled",
+    "description": "Status text when extension is enabled"
+  },
+  "statusDisabled": {
+    "message": "Disabled",
+    "description": "Status text when extension is disabled"
+  },
+  "optionsTitle": {
+    "message": "Cloudflow Options",
+    "description": "Title for the options page"
+  },
+  "optionsSubtitle": {
+    "message": "Configure your Cloudflow extension settings",
+    "description": "Subtitle for the options page"
+  },
+  "generalSettings": {
+    "message": "General Settings",
+    "description": "Section heading for general settings"
+  },
+  "advancedSettings": {
+    "message": "Advanced Settings",
+    "description": "Section heading for advanced settings"
+  },
+  "enableCloudflow": {
+    "message": "Enable Cloudflow",
+    "description": "Label for enable/disable toggle"
+  },
+  "themeLabel": {
+    "message": "Theme",
+    "description": "Label for theme selection"
+  },
+  "themeLight": {
+    "message": "Light",
+    "description": "Light theme option"
+  },
+  "themeDark": {
+    "message": "Dark",
+    "description": "Dark theme option"
+  },
+  "themeSystem": {
+    "message": "System Default",
+    "description": "System theme option"
+  },
+  "enableNotifications": {
+    "message": "Enable Notifications",
+    "description": "Label for notifications toggle"
+  },
+  "dataRetention": {
+    "message": "Data Retention (days)",
+    "description": "Label for data retention setting"
+  },
+  "btnSave": {
+    "message": "Save",
+    "description": "Save button text"
+  },
+  "btnReset": {
+    "message": "Reset to Default",
+    "description": "Reset button text"
+  },
+  "settingsSaved": {
+    "message": "Settings saved successfully",
+    "description": "Message shown after settings are saved"
+  },
+  "settingsReset": {
+    "message": "Settings reset to default",
+    "description": "Message shown after settings are reset"
+  }
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cloudflow Extension Test Page</title>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+                    'Open Sans', 'Helvetica Neue', sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 40px 20px;
+                line-height: 1.6;
+            }
+            h1 {
+                color: #4285f4;
+                border-bottom: 2px solid #4285f4;
+                padding-bottom: 10px;
+            }
+            .card {
+                background: #f7f9fc;
+                border: 1px solid #e1e4e8;
+                border-radius: 6px;
+                padding: 20px;
+                margin: 20px 0;
+            }
+            button {
+                background: #4285f4;
+                color: white;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.2s;
+            }
+            button:hover {
+                background: #3367d6;
+            }
+            code {
+                background: #f1f3f4;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            }
+            .text-muted {
+                color: #6c757d;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Cloudflow Chrome Extension Test Page</h1>
+
+        <div class="card">
+            <h2>About This Page</h2>
+            <p>
+                This page helps you test your Cloudflow Chrome extension functionality. It provides a simple interface
+                for testing various extension features without deploying to the Chrome Web Store.
+            </p>
+            <p class="text-muted">
+                Note: Make sure the extension is loaded in developer mode in Chrome before using this page.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Manual Testing</h2>
+            <p>To manually test your extension:</p>
+            <ol>
+                <li>Open Chrome and navigate to <code>chrome://extensions</code></li>
+                <li>Enable "Developer mode" (toggle in top-right)</li>
+                <li>Click "Load unpacked" and select your extension directory</li>
+                <li>Ensure the extension is enabled</li>
+                <li>Use this page to test interactions</li>
+            </ol>
+            <button id="manual-test-btn">Test Manual Interaction</button>
+            <div id="manual-test-result" style="margin-top: 10px"></div>
+        </div>
+
+        <div class="card">
+            <h2>Automatic Test Panel</h2>
+            <p>
+                Click the button below to open an automatic test panel that will help you test communication between the
+                page and your extension.
+            </p>
+            <button id="show-test-panel">Show Test Panel</button>
+        </div>
+
+        <script>
+            // Manual test button handler
+            document.getElementById('manual-test-btn').addEventListener('click', () => {
+                const resultElement = document.getElementById('manual-test-result');
+                resultElement.textContent = 'Sending test message to extension...';
+
+                try {
+                    chrome.runtime.sendMessage(
+                        { action: 'manualTest', timestamp: new Date().toISOString() },
+                        (response) => {
+                            if (chrome.runtime.lastError) {
+                                resultElement.textContent = '❌ Error: ' + chrome.runtime.lastError.message;
+                                resultElement.style.color = '#dc3545';
+                                return;
+                            }
+
+                            if (response && response.success) {
+                                resultElement.textContent = '✅ Success: ' + response.message;
+                                resultElement.style.color = '#28a745';
+                            } else {
+                                resultElement.textContent = '⚠️ Unexpected response: ' + JSON.stringify(response);
+                                resultElement.style.color = '#ffc107';
+                            }
+                        },
+                    );
+                } catch (error) {
+                    resultElement.textContent = '❌ Exception: ' + error.message;
+                    resultElement.style.color = '#dc3545';
+                }
+            });
+
+            // Show test panel button handler
+            document.getElementById('show-test-panel').addEventListener('click', () => {
+                // Load the test helper script
+                const script = document.createElement('script');
+                script.src = 'test-helper.js';
+                document.body.appendChild(script);
+            });
+        </script>
+    </body>
+</html>

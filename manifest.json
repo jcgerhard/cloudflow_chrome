@@ -1,0 +1,34 @@
+{
+    "name": "Cloudflow",
+    "description": "A chrome extension for enhancing your Cloudflow experience",
+    "version": "0.0.1",
+    "manifest_version": 3,
+    "icons": {
+        "16": "images/icon-16.png",
+        "32": "images/icon-32.png",
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    },
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_icon": {
+            "16": "images/icon-16.png",
+            "32": "images/icon-32.png",
+            "48": "images/icon-48.png",
+            "128": "images/icon-128.png"
+        }
+    },
+    "options_page": "options/options.html",
+    "background": {
+        "service_worker": "service-worker.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content_scripts/content.js"]
+        }
+    ],
+    "permissions": ["storage", "activeTab"],
+    "default_locale": "en"
+}
