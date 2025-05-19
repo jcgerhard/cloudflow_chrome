@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDropdowns();
 
     // Initialize action buttons
+    initActionButtons();
 });
 
 // Function to initialize dropdowns
@@ -154,8 +155,76 @@ function initActionButtons() {
 
     actionButtons.forEach((button, index) => {
         button.addEventListener('click', function () {
-            console.log(`Button ${index + 1} clicked`);
-            // Add your button functionality here
+            if (index === 0) {
+                // Button 1 - Copy Variables
+                // First, check if we're on a Cloudflow page
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    if (tabs[0]) {
+                        const url = tabs[0].url;
+                        if (url.includes('/appnavigator/index.html') || url.includes('/portal.cgi?quantum')) {
+                            // Send message to content script to copy variables
+                            chrome.tabs.sendMessage(tabs[0].id, { action: 'copyVariables' }, (response) => {
+                                if (chrome.runtime.lastError) {
+                                    console.error('Error sending message:', chrome.runtime.lastError);
+                                    // Show error message
+                                    button.textContent = 'Error!';
+                                    button.style.backgroundColor = '#f44336';
+                                    setTimeout(() => {
+                                        button.textContent = 'Copy Variables';
+                                        button.style.backgroundColor = '';
+                                    }, 1500);
+                                    return;
+                                }
+
+                                if (response && response.success) {
+                                    // Show success message in the popup
+                                    button.textContent = 'Copied!';
+                                    button.style.fontFamily = 'Montserrat, sans-serif';
+                                    button.style.backgroundColor = '#4caf50';
+
+                                    // Reset after 1.5 seconds
+                                    setTimeout(() => {
+                                        button.textContent = 'Copy Variables';
+                                        button.style.backgroundColor = '';
+                                    }, 1500);
+                                } else {
+                                    // Show error message
+                                    button.textContent = 'Failed!';
+                                    button.style.backgroundColor = '#f44336';
+
+                                    // Reset after 1.5 seconds
+                                    setTimeout(() => {
+                                        button.textContent = 'Copy Variables';
+                                        button.style.backgroundColor = '';
+                                    }, 1500);
+                                }
+                            });
+                        } else {
+                            // Not on a Cloudflow page
+                            button.textContent = 'Not on Cloudflow!';
+                            button.style.backgroundColor = '#ff9800';
+
+                            // Reset after 1.5 seconds
+                            setTimeout(() => {
+                                button.textContent = 'Copy Variables';
+                                button.style.backgroundColor = '';
+                            }, 1500);
+                        }
+                    }
+                });
+            } else if (index === 1) {
+                // Button 2 functionality
+                console.log('Button 2 clicked');
+                // Add functionality for button 2 here
+            }
         });
     });
+
+    // Set button labels
+    if (actionButtons.length > 0) {
+        actionButtons[0].textContent = 'Copy Variables';
+    }
+    if (actionButtons.length > 1) {
+        actionButtons[1].textContent = 'Action 2';
+    }
 }
