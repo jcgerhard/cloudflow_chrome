@@ -24,18 +24,18 @@
 
             <main>
                 <div class="dropdown-section">
-                    <!-- Add Active Instance dropdown -->
-                    <div class="dropdown" id="instance-dropdown">
-                        <button class="dropdown-toggle" id="instance-toggle">Instance</button>
-                        <div class="dropdown-selected">No selection</div>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-search">
-                                <input type="text" placeholder="Search..." class="dropdown-search-input" />
-                            </div>
-                            <div class="dropdown-content">
-                                <a href="#" class="dropdown-item">Instance 1</a>
-                                <a href="#" class="dropdown-item">Instance 2</a>
-                                <a href="#" class="dropdown-item">Instance 3</a>
+                    <!-- Active Instance dropdown -->
+                    <div class="dropdown-container">
+                        <label class="dropdown-label">Instance</label>
+                        <div class="dropdown" id="instance-dropdown">
+                            <button class="dropdown-toggle" id="instance-toggle">Instance</button>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search..." class="dropdown-search-input" />
+                                </div>
+                                <div class="dropdown-content">
+                                    <!-- Instances will be populated by JavaScript -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,8 +80,8 @@
 
                     <!-- Add two buttons next to each other -->
                     <div class="button-container">
-                        <button class="action-button">Button 1</button>
-                        <button class="action-button">Button 2</button>
+                        <button class="action-button" id="open-instance-btn">Open Instance</button>
+                        <button class="action-button" id="button-2">Button 2</button>
                     </div>
                 </div>
 

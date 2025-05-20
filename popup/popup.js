@@ -34,13 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load previously selected instance from session storage
     loadSelectedInstance();
 
-    // Settings icon click handler
-    const settingsIcon = document.getElementById('settings-icon');
-    if (settingsIcon) {
-        settingsIcon.addEventListener('click', function (e) {
-            e.preventDefault();
-            chrome.runtime.openOptionsPage();
-        });
+    // Set up the Open Instance button
+    const openInstanceBtn = document.getElementById('open-instance-btn');
+    if (openInstanceBtn) {
+        openInstanceBtn.addEventListener('click', openSelectedInstance);
     }
 });
 
@@ -177,31 +174,100 @@ function populateInstancesDropdown(instances) {
 // Select an instance
 function selectInstance(instance) {
     console.log('Instance selected:', instance);
-    if (instanceSelected) {
-        // Update the dropdown text
-        instanceSelected.textContent = instance.name;
-        instanceSelected.dataset.url = instance.url;
 
-        // Save the selection to session storage
-        sessionStorage.setItem('selectedCloudflowInstance', JSON.stringify(instance));
+    // Update the dropdown button text instead of using a separate element
+    if (instanceToggle) {
+        instanceToggle.textContent = instance.name;
+        instanceToggle.dataset.url = instance.url;
+        // Add the URL as a title attribute for tooltip on hover
+        instanceToggle.title = instance.url;
+    }
+
+    // Save the selection to session storage
+    sessionStorage.setItem('selectedCloudflowInstance', JSON.stringify(instance));
+
+    // Also save to chrome.storage.local for more reliable persistence within the session
+    chrome.storage.local.set({ selectedCloudflowInstance: instance }, function () {
+        console.log('Instance saved to local storage:', instance);
+    });
+
+    // Notify background script about the selection change
+    chrome.runtime.sendMessage({
+        action: 'instanceSelected',
+        instance: instance,
+    });
+}
+
+// Load previously selected instance from storage
+function loadSelectedInstance() {
+    // First try session storage
+    const sessionInstance = sessionStorage.getItem('selectedCloudflowInstance');
+
+    // If not in session storage, try chrome.storage.local
+    if (!sessionInstance) {
+        chrome.storage.local.get(['selectedCloudflowInstance'], function (result) {
+            if (result.selectedCloudflowInstance && instanceToggle) {
+                const instance = result.selectedCloudflowInstance;
+                instanceToggle.textContent = instance.name;
+                instanceToggle.dataset.url = instance.url;
+                // Add the URL as a title attribute for tooltip on hover
+                instanceToggle.title = instance.url;
+
+                // Also update session storage
+                sessionStorage.setItem('selectedCloudflowInstance', JSON.stringify(instance));
+                console.log('Loaded selected instance from local storage:', instance);
+            }
+        });
+    } else {
+        try {
+            const instance = JSON.parse(sessionInstance);
+            if (instanceToggle) {
+                instanceToggle.textContent = instance.name;
+                instanceToggle.dataset.url = instance.url;
+                // Add the URL as a title attribute for tooltip on hover
+                instanceToggle.title = instance.url;
+                console.log('Loaded selected instance from session storage:', instance);
+            }
+        } catch (e) {
+            console.error('Error parsing selected instance from session storage:', e);
+        }
     }
 }
 
-// Load previously selected instance from session storage
-function loadSelectedInstance() {
-    if (instanceSelected) {
-        const selectedInstance = sessionStorage.getItem('selectedCloudflowInstance');
+// Function to open the selected instance URL in the current tab
+function openSelectedInstance() {
+    // Get the currently selected instance URL
+    let instanceUrl = null;
 
+    // Check if we have a URL in the instance toggle button
+    if (instanceToggle && instanceToggle.dataset.url) {
+        instanceUrl = instanceToggle.dataset.url;
+    } else {
+        // Try to get URL from session storage
+        const selectedInstance = sessionStorage.getItem('selectedCloudflowInstance');
         if (selectedInstance) {
             try {
                 const instance = JSON.parse(selectedInstance);
-                instanceSelected.textContent = instance.name;
-                instanceSelected.dataset.url = instance.url;
-                console.log('Loaded selected instance:', instance);
+                if (instance && instance.url) {
+                    instanceUrl = instance.url;
+                }
             } catch (e) {
                 console.error('Error parsing selected instance:', e);
             }
         }
+    }
+
+    // If we have a URL, open it in the current tab
+    if (instanceUrl) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs && tabs[0]) {
+                chrome.tabs.update(tabs[0].id, { url: instanceUrl });
+                window.close(); // Close the popup after navigation
+            }
+        });
+    } else {
+        // Provide feedback if no instance is selected
+        alert('Please select a Cloudflow instance first');
     }
 }
 

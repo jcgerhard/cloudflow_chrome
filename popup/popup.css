@@ -12,7 +12,7 @@ body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
         'Open Sans', 'Helvetica Neue', sans-serif;
     width: 320px;
-    height: 450px;
+    height: 500px;
     overflow: hidden;
 }
 
@@ -135,30 +135,48 @@ footer {
 .dropdown-separator {
     height: 1px;
     background-color: #e0e0e0;
-    margin: -4px 0 4px; /* Equal spacing above and below (matches gap size) */
+    margin: 8px 0; /* Reduced from 12px to 8px */
     width: 100%;
 }
 
 /* Dropdown styling */
 .dropdown {
     position: relative;
-    margin-bottom: 15px;
-    width: 100%;
+    margin: 0; /* Remove margin as it's now on the container */
+}
+
+.dropdown-container {
+    margin: 2px 0; /* Reduced from 12px to 8px */
+    position: relative;
+}
+
+.dropdown-label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+    font-weight: 500;
 }
 
 .dropdown-toggle {
     display: block;
     width: 100%;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
+    background-color: #f0f0f0; /* Reverted to original light gray */
+    border: 1px solid #ddd; /* Reverted to original light gray border */
     border-radius: 4px;
     padding: 8px 12px;
     text-align: left;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-weight: 400; /* Reduced from 500 to 400 for thinner text */
     font-size: 14px;
+    color: #555; /* Reverted to original gray text */
     position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    transition: background-color 0.2s;
 }
 
 .dropdown-toggle::after {
@@ -168,7 +186,11 @@ footer {
     top: 50%;
     transform: translateY(-50%);
     font-size: 10px;
-    color: #666;
+    color: #666; /* Reverted to original gray dropdown arrow */
+}
+
+.dropdown-toggle:hover {
+    background-color: #e5e5e5; /* Reverted to original hover color */
 }
 
 .dropdown-selected {
@@ -233,7 +255,7 @@ footer {
 }
 
 .dropdown-message {
-    padding: 12px;
+    padding: 10px;
     color: #666;
     font-style: italic;
     text-align: center;
@@ -244,7 +266,7 @@ footer {
 .dropdown-separator {
     height: 1px;
     background-color: #eee;
-    margin: 12px 0;
+    margin: 8px 0; /* Reduced from 12px to 8px */
     width: 100%;
 }
 
@@ -256,18 +278,21 @@ footer {
 
 .action-button {
     flex: 1;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
+    background-color: #2273b9; /* Blue background matching header color */
+    border: 1px solid #1a5a94; /* Darker border for depth */
     border-radius: 4px;
     padding: 8px 12px;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
+    font-weight: 400;
+    color: white; /* White text for contrast on blue background */
     cursor: pointer;
     text-align: center;
+    transition: background-color 0.2s;
 }
 
 .action-button:hover {
-    background-color: #e5e5e5;
+    background-color: #1a5a94; /* Darker blue on hover */
 }
 
 /* Disabled dropdown */
