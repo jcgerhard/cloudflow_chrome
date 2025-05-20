@@ -39,6 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openInstanceBtn) {
         openInstanceBtn.addEventListener('click', openSelectedInstance);
     }
+
+    // Fix settings icon click handler
+    const settingsIcon = document.getElementById('settings-icon');
+    if (settingsIcon) {
+        // Remove any existing event listeners
+        settingsIcon.removeEventListener('click', handleSettingsClick);
+        // Add the event listener with the correct function
+        settingsIcon.addEventListener('click', handleSettingsClick);
+    }
 });
 
 // Update app information
@@ -269,6 +278,19 @@ function openSelectedInstance() {
         // Provide feedback if no instance is selected
         alert('Please select a Cloudflow instance first');
     }
+}
+
+// Function to handle settings icon click
+function handleSettingsClick(e) {
+    e.preventDefault();
+    console.log('Settings icon clicked');
+
+    // Use chrome.runtime.openOptionsPage API to open the options page
+    chrome.runtime.openOptionsPage(() => {
+        console.log('Options page opened');
+        // Close the popup when options page is opened
+        window.close();
+    });
 }
 
 // Console log for debugging
