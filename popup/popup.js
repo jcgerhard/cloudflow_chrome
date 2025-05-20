@@ -1,5 +1,11 @@
 // Popup script for Cloudflow Chrome Extension
 
+// DOM elements
+const instanceDropdown = document.getElementById('instance-dropdown');
+const instanceToggle = document.getElementById('instance-toggle');
+const instanceSelected = document.querySelector('#instance-dropdown .dropdown-selected');
+const instanceContent = document.querySelector('#instance-dropdown .dropdown-content');
+
 document.addEventListener('DOMContentLoaded', () => {
     // Get UI elements
     const currentSite = document.getElementById('current-site');
@@ -17,145 +23,187 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Update app info in the popup
-    function updateAppInfo() {
-        const manifest = chrome.runtime.getManifest();
-        const versionElement = document.getElementById('version-info');
-        if (versionElement) {
-            versionElement.textContent = `Release v${manifest.version}`;
-        }
-        const appNameElement = document.getElementById('app-name');
-        if (appNameElement) {
-            appNameElement.textContent = `${manifest.name}`;
-        }
-    }
-
-    // Call this function when the popup is loaded
     updateAppInfo();
+
+    // Initialize dropdowns
+    initializeDropdowns();
+
+    // Load instances from storage
+    loadCloudflowInstances();
+
+    // Load previously selected instance from session storage
+    loadSelectedInstance();
 
     // Settings icon click handler
     const settingsIcon = document.getElementById('settings-icon');
     if (settingsIcon) {
         settingsIcon.addEventListener('click', function (e) {
             e.preventDefault();
-            // Open options page
             chrome.runtime.openOptionsPage();
         });
     }
-
-    // Initialize dropdown functionality
-    initDropdowns();
-
-    // Initialize action buttons
 });
 
-// Function to initialize dropdowns
-function initDropdowns() {
+// Update app information
+function updateAppInfo() {
+    const manifest = chrome.runtime.getManifest();
+    const versionElement = document.getElementById('version-info');
+    if (versionElement) {
+        versionElement.textContent = `Release v${manifest.version}`;
+    }
+    const appNameElement = document.getElementById('app-name');
+    if (appNameElement) {
+        appNameElement.textContent = `${manifest.name}`;
+    }
+}
+
+// Initialize all dropdowns with toggle behavior
+function initializeDropdowns() {
+    console.log('Initializing dropdowns...');
     const dropdowns = document.querySelectorAll('.dropdown');
 
-    // Ensure all dropdowns start collapsed
-    dropdowns.forEach((dropdown) => dropdown.classList.remove('active'));
-
-    // Handle outside clicks
-    document.addEventListener('click', function (e) {
-        // Only close dropdowns if clicking outside them
-        if (!e.target.closest('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-            dropdowns.forEach((dropdown) => dropdown.classList.remove('active'));
-        }
-    });
-
-    // Set up each dropdown
-    dropdowns.forEach((dropdown) => {
+    dropdowns.forEach((dropdown, index) => {
+        console.log(`Setting up dropdown #${index}`);
         const toggle = dropdown.querySelector('.dropdown-toggle');
-        const searchInput = dropdown.querySelector('.dropdown-search-input');
-        const items = dropdown.querySelectorAll('.dropdown-item');
-        const selectedDisplay = dropdown.querySelector('.dropdown-selected');
 
-        // Toggle dropdown open/closed
-        toggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const isCurrentlyActive = dropdown.classList.contains('active');
-
-            // Close all dropdowns
-            dropdowns.forEach((d) => d.classList.remove('active'));
-
-            // Open this one if it was closed
-            if (!isCurrentlyActive) {
-                dropdown.classList.add('active');
-                if (searchInput) searchInput.focus();
-            }
-        });
-
-        // Handle search filtering
-        if (searchInput) {
-            // Stop propagation on search input clicks
-            searchInput.addEventListener('click', (e) => e.stopPropagation());
-
-            // Filter items based on input
-            searchInput.addEventListener('input', () => {
-                const filter = searchInput.value.toLowerCase();
-                items.forEach((item) => {
-                    item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
-                });
-            });
-        }
-
-        // Add click handlers to all dropdown items
-        items.forEach((item) => {
-            item.addEventListener('click', function (e) {
+        if (toggle) {
+            // Toggle dropdown menu
+            toggle.addEventListener('click', function (e) {
+                console.log(`Toggle clicked for dropdown #${index}`);
                 e.preventDefault();
+                e.stopPropagation();
 
-                // Close the dropdown when item is clicked
-                dropdown.classList.remove('active');
+                // Toggle current dropdown
+                dropdown.classList.toggle('open');
+                console.log(`Dropdown open state: ${dropdown.classList.contains('open')}`);
 
-                // Update the selected item display
-                if (selectedDisplay) {
-                    selectedDisplay.textContent = this.textContent;
-                    // Save the selection in localStorage for persistence
-                    const dropdownId = dropdown.id;
-                    if (dropdownId) {
-                        localStorage.setItem(`${dropdownId}-selection`, this.textContent);
+                // Close all other open dropdowns
+                dropdowns.forEach((d, i) => {
+                    if (i !== index && d.classList.contains('open')) {
+                        d.classList.remove('open');
+                    }
+                });
+
+                // Focus search input if dropdown is opened
+                if (dropdown.classList.contains('open')) {
+                    const searchInput = dropdown.querySelector('.dropdown-search-input');
+                    if (searchInput) {
+                        setTimeout(() => searchInput.focus(), 100);
                     }
                 }
-
-                // Here you can add any additional functionality when an item is clicked
-                // For example: Update the dropdown button text
-                // toggle.textContent = this.textContent;
-
-                // Or navigate to the item's href if needed
-                // const href = this.getAttribute('href');
-                // if (href && href !== '#') {
-                //     window.location.href = href;
-                // }
             });
-        });
+        }
 
-        // Restore saved selection from localStorage
-        if (selectedDisplay && dropdown.id) {
-            const savedSelection = localStorage.getItem(`${dropdown.id}-selection`);
-            if (savedSelection) {
-                selectedDisplay.textContent = `${savedSelection}`;
-            }
+        // Handle search functionality
+        const searchInput = dropdown.querySelector('.dropdown-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                const items = dropdown.querySelectorAll('.dropdown-item');
+
+                items.forEach((item) => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+
+            // Prevent dropdown from closing when clicking in the search field
+            searchInput.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
         }
     });
 
-    // Double-check that all dropdowns are closed by default
-    setTimeout(() => {
-        document.querySelectorAll('.dropdown').forEach((dropdown) => {
-            dropdown.classList.remove('active');
-        });
-    }, 0);
-}
-
-// Function to initialize action buttons
-function initActionButtons() {
-    const actionButtons = document.querySelectorAll('.action-button');
-
-    actionButtons.forEach((button, index) => {
-        button.addEventListener('click', function () {
-            console.log(`Button ${index + 1} clicked`);
-            // Add your button functionality here
-        });
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.dropdown')) {
+            dropdowns.forEach((dropdown) => {
+                dropdown.classList.remove('open');
+            });
+        }
     });
 }
+
+// Load Cloudflow instances from storage
+function loadCloudflowInstances() {
+    chrome.storage.sync.get(['cloudflowInstances'], function (result) {
+        console.log('Loaded instances:', result.cloudflowInstances);
+        const instances = result.cloudflowInstances || [];
+        populateInstancesDropdown(instances);
+    });
+}
+
+// Populate the instances dropdown
+function populateInstancesDropdown(instances) {
+    console.log('Populating instances dropdown...');
+    // Clear existing items
+    if (instanceContent) {
+        instanceContent.innerHTML = '';
+
+        if (instances.length === 0) {
+            // No instances found - add a message
+            const noInstancesMsg = document.createElement('div');
+            noInstancesMsg.className = 'dropdown-message';
+            noInstancesMsg.textContent = 'No Cloudflow instances available. Add instances in the settings.';
+            instanceContent.appendChild(noInstancesMsg);
+        } else {
+            // Add each instance to the dropdown
+            instances.forEach((instance) => {
+                const instanceItem = document.createElement('a');
+                instanceItem.href = '#';
+                instanceItem.className = 'dropdown-item';
+                instanceItem.textContent = instance.name;
+                instanceItem.dataset.url = instance.url;
+
+                // Handle instance selection
+                instanceItem.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    selectInstance(instance);
+                    instanceDropdown.classList.remove('open');
+                });
+
+                instanceContent.appendChild(instanceItem);
+            });
+        }
+    } else {
+        console.error('Could not find instanceContent element');
+    }
+}
+
+// Select an instance
+function selectInstance(instance) {
+    console.log('Instance selected:', instance);
+    if (instanceSelected) {
+        // Update the dropdown text
+        instanceSelected.textContent = instance.name;
+        instanceSelected.dataset.url = instance.url;
+
+        // Save the selection to session storage
+        sessionStorage.setItem('selectedCloudflowInstance', JSON.stringify(instance));
+    }
+}
+
+// Load previously selected instance from session storage
+function loadSelectedInstance() {
+    if (instanceSelected) {
+        const selectedInstance = sessionStorage.getItem('selectedCloudflowInstance');
+
+        if (selectedInstance) {
+            try {
+                const instance = JSON.parse(selectedInstance);
+                instanceSelected.textContent = instance.name;
+                instanceSelected.dataset.url = instance.url;
+                console.log('Loaded selected instance:', instance);
+            } catch (e) {
+                console.error('Error parsing selected instance:', e);
+            }
+        }
+    }
+}
+
+// Console log for debugging
+console.log('Popup script loaded');

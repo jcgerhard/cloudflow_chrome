@@ -125,12 +125,10 @@ input[type='number'] {
 
 /* Footer and buttons */
 footer {
+    margin-top: 15px; /* Reduced from 20px */
     display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
+    justify-content: center;
+    padding: 0 20px 15px; /* Reduced bottom padding from 20px to 15px */
 }
 
 .actions {
@@ -165,8 +163,104 @@ footer {
     background-color: #e8eaed;
 }
 
+.btn.small {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.btn.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.btn.danger:hover {
+    background-color: #f1b0b7;
+}
+
+/* Status message styling */
 .status {
-    padding: 10px 0;
+    padding: 6px 15px; /* Always have the same padding */
+    margin-top: 12px;
+    text-align: center;
+    border-radius: 4px;
+    font-weight: 500;
+    height: 30px; /* Fixed height instead of min-height */
+    transition: all 0.3s ease;
+    opacity: 0;
+    border: 1px solid transparent; /* Transparent border by default */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status.active {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+    opacity: 1;
+}
+
+/* Instances Container */
+.instances-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.instances-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.instance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+}
+
+.instance-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.instance-info p {
+    margin: 0;
     font-size: 14px;
-    color: #4caf50;
+    color: #666;
+}
+
+.instance-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.instance-form {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.instance-form h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 18px;
+}
+
+.instance-form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.empty-message {
+    color: #666;
+    font-style: italic;
+    text-align: center;
 }
