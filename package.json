@@ -1,7 +1,7 @@
 {
     "name": "cloudflow-companion",
     "version": "0.0.1",
-    "description": "A chrome extension for enhancing your Cloudflow experience",
+    "description": "A chrome extension for an enhancingenhanced Cloudflow experience",
     "private": true,
     "scripts": {
         "build": "echo \"Add your build command here\" && exit 0",
