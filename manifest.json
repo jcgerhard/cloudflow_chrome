@@ -29,6 +29,7 @@
             "js": ["content_scripts/content.js"]
         }
     ],
-    "permissions": ["storage", "activeTab"],
+    "permissions": ["storage", "activeTab", "cookies"],
+    "host_permissions": ["*://*/*"],
     "default_locale": "en"
 }

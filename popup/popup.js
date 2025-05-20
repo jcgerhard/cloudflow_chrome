@@ -165,10 +165,16 @@ function populateInstancesDropdown(instances) {
                 instanceItem.textContent = instance.name;
                 instanceItem.dataset.url = instance.url;
 
+                // Store instance data directly in the element's dataset
+                instanceItem.dataset.instance = JSON.stringify(instance);
+
                 // Handle instance selection
                 instanceItem.addEventListener('click', function (e) {
                     e.preventDefault();
-                    selectInstance(instance);
+                    // Get the instance from the dataset to ensure we're using the correct one
+                    const clickedInstance = JSON.parse(this.dataset.instance);
+                    console.log('Clicked instance:', clickedInstance);
+                    selectInstance(clickedInstance);
                     instanceDropdown.classList.remove('open');
                 });
 
@@ -205,6 +211,26 @@ function selectInstance(instance) {
         action: 'instanceSelected',
         instance: instance,
     });
+
+    // Get session ID from the selected instance
+    getSessionIdForInstance(instance.url);
+}
+
+// Get the session ID for the selected instance
+function getSessionIdForInstance(url) {
+    if (!url) {
+        console.error('No URL provided for getting session ID');
+        return;
+    }
+
+    console.log('Getting session ID for URL:', url);
+    chrome.runtime.sendMessage({ action: 'getSessionId', url: url }, (response) => {
+        if (response && response.success) {
+            console.log('Session ID:', response.sessionId);
+        } else {
+            console.error('Failed to get session ID:', response ? response.error : 'Unknown error');
+        }
+    });
 }
 
 // Load previously selected instance from storage
@@ -225,6 +251,9 @@ function loadSelectedInstance() {
                 // Also update session storage
                 sessionStorage.setItem('selectedCloudflowInstance', JSON.stringify(instance));
                 console.log('Loaded selected instance from local storage:', instance);
+
+                // Get session ID for the loaded instance
+                getSessionIdForInstance(instance.url);
             }
         });
     } else {
@@ -236,6 +265,9 @@ function loadSelectedInstance() {
                 // Add the URL as a title attribute for tooltip on hover
                 instanceToggle.title = instance.url;
                 console.log('Loaded selected instance from session storage:', instance);
+
+                // Get session ID for the loaded instance
+                getSessionIdForInstance(instance.url);
             }
         } catch (e) {
             console.error('Error parsing selected instance from session storage:', e);
